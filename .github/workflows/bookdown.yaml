@@ -31,6 +31,9 @@ jobs:
 
       - uses: r-lib/actions/setup-renv@v2
 
+      - name: Install packages
+        run: Rscript -e 'install.packages(c("downlit","xml2"))'
+
       - name: Cache bookdown results
         uses: actions/cache@v2
         with:
