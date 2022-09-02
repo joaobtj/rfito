@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Capítulo 5 Análise de sobrevivência | Análises estatísticas com o R: Experimentos aplicados à Fitopatologia</title>
+<meta name="author" content="João B. Tolentino Jr.">
+<meta name="description" content="Na análise de sobrevivência a variável dependente é o tempo até ocorrência de determinado evento. Compara-se a rapidez com que ocorreu determinado evento, ao contrário de comparar as percentagens...">
+<meta name="generator" content="bookdown 0.28 with bs4_book()">
+<meta property="og:title" content="Capítulo 5 Análise de sobrevivência | Análises estatísticas com o R: Experimentos aplicados à Fitopatologia">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://rfito.tolentino.pro.br/surv.html">
+<meta property="og:description" content="Na análise de sobrevivência a variável dependente é o tempo até ocorrência de determinado evento. Compara-se a rapidez com que ocorreu determinado evento, ao contrário de comparar as percentagens...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Capítulo 5 Análise de sobrevivência | Análises estatísticas com o R: Experimentos aplicados à Fitopatologia">
+<meta name="twitter:description" content="Na análise de sobrevivência a variável dependente é o tempo até ocorrência de determinado evento. Compara-se a rapidez com que ocorreu determinado evento, ao contrário de comparar as percentagens...">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Montserrat-0.4.2/font.css" rel="stylesheet">
+<link href="libs/Signika-0.4.2/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.4.0/transition.js"></script><script src="libs/bs3compat-0.4.0/tabs.js"></script><script src="libs/bs3compat-0.4.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Análises estatísticas com o R: Experimentos aplicados à Fitopatologia</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> Análises estatísticas com o R: Experimentos aplicados à Fitopatologia</a></li>
+<li><a class="" href="aaccm.html"><span class="header-section-number">2</span> Área Abaixo da Curva de Crescimento Micelial - AACCM</a></li>
+<li><a class="" href="ivcm.html"><span class="header-section-number">3</span> Índice de Velocidade do Crescimento Micelial - IVCM</a></li>
+<li><a class="" href="an%C3%A1lise-de-vari%C3%A2ncia.html"><span class="header-section-number">4</span> Análise de Variância</a></li>
+<li><a class="active" href="surv.html"><span class="header-section-number">5</span> Análise de sobrevivência</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/joaobtj/rfito">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="surv" class="section level1" number="5">
+<h1>
+<span class="header-section-number">Capítulo 5</span> Análise de sobrevivência<a class="anchor" aria-label="anchor" href="#surv"><i class="fas fa-link"></i></a>
+</h1>
+<p>Na análise de sobrevivência a variável dependente é o tempo até ocorrência de determinado evento. Compara-se a rapidez com que ocorreu determinado evento, ao contrário de comparar as percentagens de ocorrência deste evento ao final de determinado tempo.</p>
+<p>É a técnica ideal para analisar respostas binárias (ter ou não ter um evento) em estudos temporais.</p>
+<p>No momento da análise, podem haver indivíduos censurados, isto é, que não desenvolveram o evento até o fim do tempo de observação do estudo (independentemente do motivo).</p>
+<div id="curva-de-sobrevivência-de-kaplan-meier" class="section level2" number="5.1">
+<h2>
+<span class="header-section-number">5.1</span> Curva de sobrevivência de Kaplan-Meier<a class="anchor" aria-label="anchor" href="#curva-de-sobreviv%C3%AAncia-de-kaplan-meier"><i class="fas fa-link"></i></a>
+</h2>
+<p>As curvas apresentam uma forma de “escada”. No eixo vertical está a porcentagem de sobrevivência, ou seja, a probabilidade de não ocorrer o evento.</p>
+</div>
+<div id="exemplo-de-uma-análise-de-sobrevivência" class="section level2" number="5.2">
+<h2>
+<span class="header-section-number">5.2</span> Exemplo de uma Análise de Sobrevivência<a class="anchor" aria-label="anchor" href="#exemplo-de-uma-an%C3%A1lise-de-sobreviv%C3%AAncia"><i class="fas fa-link"></i></a>
+</h2>
+<p>Considere os dados presentes na planilha <a href="data/surv.xlsx">surv.xlsx</a>.</p>
+<p>Os dados representam a germinação de escleródios de <em>S. rolfsii</em> submetidos a tratamentos com óleo essencial de Cravo a 5000 ppm em diferentes tempos (30, 90 e 180 minutos).</p>
+<p>A organização da planilha deve ser feita rigorosamente desta forma:</p>
+<ul>
+<li>1ª coluna: nome dos tratamentos;</li>
+<li>2ª coluna: número das repetições;</li>
+<li>3ª coluna: número de indivíduos em cada repetição;</li>
+<li>4ª coluna em diante: número de indivíduos que apresentaram o evento estudado com o nome das colunas representando o tempo;</li>
+<li>Última coluna: números de indivíduos censurados.</li>
+</ul>
+<p>Caso esta organização seja seguida rigorosamente, podemos utilizar a função <a href="script/surv_data.R"><code>surv_data</code></a> para preparar os dados para a Análise de sobrevivência.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="st">"script/surv_data.R"</span><span class="op">)</span></span>
+<span><span class="va">sobrev</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="st">"data/surv.xlsx"</span>, skip<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">surv_data</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>Iniciamos então a análise com o pacote <code>survival</code>:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival">survival</a></span><span class="op">)</span></span>
+<span><span class="va">an_sobrev</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html">survfit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">trat</span>, data<span class="op">=</span><span class="va">sobrev</span><span class="op">)</span></span>
+<span><span class="va">an_sobrev</span></span></code></pre></div>
+<pre><code>## Call: survfit(formula = Surv(time, status) ~ trat, data = sobrev)
+## 
+##               n events median 0.95LCL 0.95UCL
+## trat=CR030   48     47    7.5       7       9
+## trat=CR090   48     45    7.0       6       7
+## trat=CR180   48      0     NA      NA      NA
+## trat=TEST030 48     48    3.0       2       4
+## trat=TEST090 48     48    3.0       2       4
+## trat=TEST180 48     48    3.0       3       4</code></pre>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">an_sobrev</span>, censored <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Call: survfit(formula = Surv(time, status) ~ trat, data = sobrev)
+## 
+##                 trat=CR030 
+##  time n.risk n.event survival std.err lower 95% CI upper 95% CI
+##     3     48       2   0.9583  0.0288        0.903        1.000
+##     4     46       6   0.8333  0.0538        0.734        0.946
+##     5     40       3   0.7708  0.0607        0.661        0.899
+##     7     37      13   0.5000  0.0722        0.377        0.663
+##     8     24       7   0.3542  0.0690        0.242        0.519
+##     9     17       6   0.2292  0.0607        0.136        0.385
+##    10     11       1   0.2083  0.0586        0.120        0.362
+##    12     10       9   0.0208  0.0206        0.003        0.145
+## 
+##                 trat=CR090 
+##  time n.risk n.event survival std.err lower 95% CI upper 95% CI
+##     3     48       3   0.9375  0.0349       0.8715        1.000
+##     4     45       2   0.8958  0.0441       0.8135        0.987
+##     5     43       8   0.7292  0.0641       0.6137        0.866
+##     6     35       6   0.6042  0.0706       0.4805        0.760
+##     7     29      14   0.3125  0.0669       0.2054        0.475
+##     8     15       6   0.1875  0.0563       0.1041        0.338
+##     9      9       5   0.0833  0.0399       0.0326        0.213
+##    12      4       1   0.0625  0.0349       0.0209        0.187
+## 
+##                 trat=CR180 
+##         time       n.risk      n.event     survival      std.err lower 95% CI 
+##           12           48            0            1            0            1 
+## upper 95% CI 
+##            1 
+## 
+##                 trat=TEST030 
+##  time n.risk n.event survival std.err lower 95% CI upper 95% CI
+##     2     48      23   0.5208  0.0721       0.3971        0.683
+##     3     25       8   0.3542  0.0690       0.2417        0.519
+##     4     17      12   0.1042  0.0441       0.0454        0.239
+##     5      5       4   0.0208  0.0206       0.0030        0.145
+##     6      1       1   0.0000     NaN           NA           NA
+## 
+##                 trat=TEST090 
+##  time n.risk n.event survival std.err lower 95% CI upper 95% CI
+##     2     48      19   0.6042  0.0706       0.4805        0.760
+##     3     29       9   0.4167  0.0712       0.2981        0.582
+##     4     20      11   0.1875  0.0563       0.1041        0.338
+##     5      9       7   0.0417  0.0288       0.0107        0.162
+##     6      2       2   0.0000     NaN           NA           NA
+## 
+##                 trat=TEST180 
+##  time n.risk n.event survival std.err lower 95% CI upper 95% CI
+##     2     48      11   0.7708  0.0607       0.6606        0.899
+##     3     37      18   0.3958  0.0706       0.2791        0.561
+##     4     19       8   0.2292  0.0607       0.1364        0.385
+##     5     11       8   0.0625  0.0349       0.0209        0.187
+##     6      3       3   0.0000     NaN           NA           NA</code></pre>
+<p>Comparação pareada (pairwise) entre duas curvas de sobrevivência utilizando o teste G-rho (logrank test).</p>
+<p>No exemplo abaixo, testou-se a diferença entre os tratamentos <em>TETS030</em> e <em>CR030</em>.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sobrev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">trat</span><span class="op">==</span><span class="st">"TEST030"</span> <span class="op">|</span> <span class="va">trat</span><span class="op">==</span><span class="st">"CR030"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/survdiff.html">survdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">trat</span>, data <span class="op">=</span> <span class="va">.</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Call:
+## survdiff(formula = Surv(time, status) ~ trat, data = .)
+## 
+##               N Observed Expected (O-E)^2/E (O-E)^2/V
+## trat=CR030   48       47     74.4      10.1      78.4
+## trat=TEST030 48       48     20.6      36.5      78.4
+## 
+##  Chisq= 78.4  on 1 degrees of freedom, p= &lt;2e-16</code></pre>
+<p>E as curvas de sobrevivência podem ser plotadas com o pacote <code>ggplot2</code>, utilizando a geometria <code>geom_step</code>.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span> <span class="va">g</span> <span class="op">&lt;-</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>trat<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">an_sobrev</span>, c <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">$</span><span class="va">strata</span>,</span>
+<span>          time<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">an_sobrev</span>, c <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">$</span><span class="va">time</span>,</span>
+<span>          surv<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">an_sobrev</span>, c <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">$</span><span class="va">surv</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">g</span></span></code></pre></div>
+<pre><code>##            trat time       surv
+## 1    trat=CR030    3 0.95833333
+## 2    trat=CR030    4 0.83333333
+## 3    trat=CR030    5 0.77083333
+## 4    trat=CR030    7 0.50000000
+## 5    trat=CR030    8 0.35416667
+## 6    trat=CR030    9 0.22916667
+## 7    trat=CR030   10 0.20833333
+## 8    trat=CR030   12 0.02083333
+## 9    trat=CR090    3 0.93750000
+## 10   trat=CR090    4 0.89583333
+## 11   trat=CR090    5 0.72916667
+## 12   trat=CR090    6 0.60416667
+## 13   trat=CR090    7 0.31250000
+## 14   trat=CR090    8 0.18750000
+## 15   trat=CR090    9 0.08333333
+## 16   trat=CR090   12 0.06250000
+## 17   trat=CR180   12 1.00000000
+## 18 trat=TEST030    2 0.52083333
+## 19 trat=TEST030    3 0.35416667
+## 20 trat=TEST030    4 0.10416667
+## 21 trat=TEST030    5 0.02083333
+## 22 trat=TEST030    6 0.00000000
+## 23 trat=TEST090    2 0.60416667
+## 24 trat=TEST090    3 0.41666667
+## 25 trat=TEST090    4 0.18750000
+## 26 trat=TEST090    5 0.04166667
+## 27 trat=TEST090    6 0.00000000
+## 28 trat=TEST180    2 0.77083333
+## 29 trat=TEST180    3 0.39583333
+## 30 trat=TEST180    4 0.22916667
+## 31 trat=TEST180    5 0.06250000
+## 32 trat=TEST180    6 0.00000000</code></pre>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="va">g</span><span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">trat</span><span class="op">==</span><span class="st">"trat=CR030"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">time</span>, y<span class="op">=</span><span class="va">surv</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_step</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="05-sobrev_files/figure-html/unnamed-chunk-5-1.png" width="672"></div>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="an%C3%A1lise-de-vari%C3%A2ncia.html"><span class="header-section-number">4</span> Análise de Variância</a></div>
+<div class="empty"></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#surv"><span class="header-section-number">5</span> Análise de sobrevivência</a></li>
+<li><a class="nav-link" href="#curva-de-sobreviv%C3%AAncia-de-kaplan-meier"><span class="header-section-number">5.1</span> Curva de sobrevivência de Kaplan-Meier</a></li>
+<li><a class="nav-link" href="#exemplo-de-uma-an%C3%A1lise-de-sobreviv%C3%AAncia"><span class="header-section-number">5.2</span> Exemplo de uma Análise de Sobrevivência</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/joaobtj/rfito/blob/main/05-sobrev.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/joaobtj/rfito/edit/main/05-sobrev.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Análises estatísticas com o R: Experimentos aplicados à Fitopatologia</strong>" was written by João B. Tolentino Jr.. It was last built on 2022-09-02.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>
