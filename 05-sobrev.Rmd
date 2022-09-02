@@ -35,12 +35,12 @@ A organização da planilha deve ser feita rigorosamente desta forma:
  * 4ª coluna em diante: número de indivíduos que apresentaram o evento estudado com o nome das colunas representando o tempo;
  * Última coluna: números de indivíduos censurados.
 
-Caso esta organização seja seguida rigorosamente, podemos utilizar a função [`surv_data`](script/surv_data.R) para preparar os dados para a Análise de sobrevivência.
+Caso esta organização seja seguida rigorosamente, podemos utilizar a função [`surv_data` (download aqui)](script/surv_data.R) para preparar os dados para a análise de sobrevivência.
 
 
 ```{r}
 source("script/surv_data.R")
-sobrev <- readxl::read_excel("data/surv.xlsx", skip=2) %>% surv_data()
+sobrev <- readxl::read_excel("data/surv.xlsx", skip = 2) %>% surv_data()
 ```
 
 
@@ -48,35 +48,36 @@ Iniciamos então a análise com o pacote `survival`:
 
 ```{r}
 library(survival)
-an_sobrev <- survfit(Surv(time, status)~trat, data=sobrev)
+an_sobrev <- survfit(Surv(time, status) ~ trat, data = sobrev)
 an_sobrev
 summary(an_sobrev, censored = TRUE)
 ```
 
 Comparação pareada (pairwise) entre duas curvas de sobrevivência utilizando o teste G-rho (logrank test).
 
-No exemplo abaixo, testou-se a diferença entre os tratamentos *TETS030* e *CR030*.
+No exemplo abaixo, testou-se a diferença entre os tratamentos *TETS090* e *CR090*.
 
 
 ```{r}
-sobrev %>% filter(trat=="TEST030" | trat=="CR030") %>% 
-survdiff(Surv(time, status) ~ trat, data = .)
+sobrev %>%
+  filter(trat == "TEST090" | trat == "CR090") %>%
+  survdiff(Surv(time, status) ~ trat, data = .)
 ```
 
 E as curvas de sobrevivência podem ser plotadas com o pacote `ggplot2`, utilizando a geometria `geom_step`.
 
 
 ```{r}
+g_surv <- data.frame(
+  trat = summary(an_sobrev, c = T)$strata,
+  time = summary(an_sobrev, c = T)$time,
+  surv = summary(an_sobrev, c = T)$surv
+)
 
- g <-
-    data.frame(trat=summary(an_sobrev, c = T)$strata,
-          time=summary(an_sobrev, c = T)$time,
-          surv=summary(an_sobrev, c = T)$surv)
-
-g
 
 library(ggplot2)
-g%>% filter(trat=="trat=CR030") %>% ggplot( aes(x=time, y=surv))+
+g_surv %>%
+  filter(trat == "trat=CR090") %>%
+  ggplot(aes(x = time, y = surv)) +
   geom_step()
 ```
-

@@ -56,6 +56,24 @@ As curvas de progressos só podem ser comparadas entre si quando tem exatamente 
 
 :::
  
+ 
+```{r, echo=FALSE}
+dados_aaccm <- readxl::read_excel("data/pareamento.xlsx", skip = 6)
+dados_aaccm <- dados_aaccm %>%
+  select(!starts_with("x")) %>%
+  pivot_longer(3:length(.), names_to = "tempo", values_to = "diametro") %>%
+  mutate(tempo = as.numeric(tempo) - as.numeric(tempo[1]))
+
+dados_aaccm %>%
+  filter(trat == "TEST" | trat == "1A") %>%
+  filter(rep == 1) %>%
+  ggplot(aes(x = tempo, y = diametro, colour = trat)) +
+  geom_line() +
+  geom_point()
+```
+
+
+
  Em experimentos comparativos, devemos calcular a AACCM para cada repetição de cada tratamento, afim de prossegurimos com as análises estatísticas posteriormente.
  
  O primeiro passo é digitar os seus dados em um formato organizado e passível de leitura pelo software R. Vou exemplificar a digitação em uma planilha do Excel, pois é o formato amplamente utilizado em nosso laboratório.
@@ -77,12 +95,12 @@ knitr::include_graphics("image/excel_diam.png")
  
  Com a planilha do Excel devidamente preenchida e todos os valores conferidos, podemos seguir com a importação desta para o ambiente do R. 
  
- [Uma planilha de exemplo está aqui para download.](data/aaccm.xlsx)
+ [Uma planilha de exemplo está aqui para download.](data/pareamento.xlsx)
  
  Para isso, utilizamos a função `read_excel` do pacote `readxl`
  
 ```{r}
-dados_aaccm <- readxl::read_excel("data/aaccm.xlsx", skip = 6)
+dados_aaccm <- readxl::read_excel("data/pareamento.xlsx", skip = 6)
 ```
 
 
@@ -99,9 +117,9 @@ library(dplyr)
 library(tidyr)
 
 dados_aaccm <- dados_aaccm %>%
-  select(!starts_with(c("a", "b"))) %>%
-  pivot_longer(4:length(.), names_to = "tempo", values_to = "diametro") %>%
-  mutate(tempo = as.numeric(tempo))
+  select(!starts_with("x")) %>%
+  pivot_longer(3:length(.), names_to = "tempo", values_to = "diametro") %>%
+  mutate(tempo = as.numeric(tempo) - as.numeric(tempo[1]))
 ```
 
 ```{r, echo=FALSE}
@@ -114,10 +132,9 @@ Após estas instruções, é possível calcular a AACCM para cada repetição de
 ```{r}
 library(phytopathologyr)
 dados_aaccm <- dados_aaccm %>%
-  group_by(oe, dose, rep) %>%
-  summarise(area = audpc(diametro, tempo)) %>%
+  group_by(trat, rep) %>%
+  summarise(aaccm = audpc(diametro, tempo)) %>%
   ungroup()
-
 ```
 
 ```{r, echo=FALSE}
@@ -127,5 +144,5 @@ dplyr::glimpse(dados_aaccm)
 Por fim, o resultado destes cálculos pode ser salvo para utilização nas análises posteriores. O formato *.csv* é idela para salvar, visto que sua importação pelo R é facilmente executado e pode ser aberto em qualquer computador para leitura.
 
 ```{r}
-readr::write_csv2(dados_aaccm, "data/area.csv")
+readr::write_csv2(dados_aaccm, "data/aaccm.csv")
 ```

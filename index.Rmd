@@ -24,4 +24,6 @@ Profa. Dra. Adriana Terumi Itako
 
 Prof. Dr. João Batista Tolentino Júnior
 
+## Projeto do RSudio Cloud
 
+Acesse o link [https://rstudio.cloud/content/4435631](https://rstudio.cloud/content/4435631){target="_blank"}

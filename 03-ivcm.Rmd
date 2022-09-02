@@ -38,14 +38,14 @@ mvi(y = diam, time = tempo)
 
 
 ```{r, include=FALSE}
-dados_ivcm <- readxl::read_excel("data/aaccm.xlsx", skip = 6)
+dados_ivcm <- readxl::read_excel("data/pareamento.xlsx", skip = 6)
 
 library(dplyr)
 library(tidyr)
 
 dados_ivcm <- dados_ivcm %>%
-  select(!starts_with(c("a", "b"))) %>%
-  pivot_longer(4:length(.), names_to = "tempo", values_to = "diametro") %>%
+  select(!starts_with("x")) %>%
+  pivot_longer(3:length(.), names_to = "tempo", values_to = "diametro") %>%
   mutate(tempo = as.numeric(tempo))
 ```
 
@@ -54,16 +54,18 @@ O cálculo do IVCM para cada repetição de cada tratamento é feito com a funç
 ```{r}
 library(phytopathologyr)
 dados_ivcm <- dados_ivcm %>%
-  group_by(oe, dose, rep) %>%
-  summarise(area = mvi(diametro, tempo)) %>%
+  group_by(trat, rep) %>%
+  summarise(ivcm = mvi(diametro, tempo)) %>%
   ungroup()
-
-dados_ivcm
 ```
+
+```{r, echo=FALSE}
+dplyr::glimpse(dados_ivcm)
+```
+
 
 Por fim, o resultado destes cálculos pode ser salvo para utilização nas análises posteriores. O formato *.csv* é idela para salvar, visto que sua importação pelo R é facilmente executado e pode ser aberto em qualquer computador para leitura.
 
 ```{r}
-
 readr::write_csv2(dados_ivcm, "data/ivcm.csv")
 ```
