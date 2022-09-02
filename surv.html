@@ -85,14 +85,14 @@
 <li>4ª coluna em diante: número de indivíduos que apresentaram o evento estudado com o nome das colunas representando o tempo;</li>
 <li>Última coluna: números de indivíduos censurados.</li>
 </ul>
-<p>Caso esta organização seja seguida rigorosamente, podemos utilizar a função <a href="script/surv_data.R"><code>surv_data</code></a> para preparar os dados para a Análise de sobrevivência.</p>
+<p>Caso esta organização seja seguida rigorosamente, podemos utilizar a função <a href="script/surv_data.R"><code>surv_data</code> (download aqui)</a> para preparar os dados para a análise de sobrevivência.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="st">"script/surv_data.R"</span><span class="op">)</span></span>
-<span><span class="va">sobrev</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="st">"data/surv.xlsx"</span>, skip<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">surv_data</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">sobrev</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="st">"data/surv.xlsx"</span>, skip <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">surv_data</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Iniciamos então a análise com o pacote <code>survival</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival">survival</a></span><span class="op">)</span></span>
-<span><span class="va">an_sobrev</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html">survfit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">trat</span>, data<span class="op">=</span><span class="va">sobrev</span><span class="op">)</span></span>
+<span><span class="va">an_sobrev</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html">survfit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">trat</span>, data <span class="op">=</span> <span class="va">sobrev</span><span class="op">)</span></span>
 <span><span class="va">an_sobrev</span></span></code></pre></div>
 <pre><code>## Call: survfit(formula = Surv(time, status) ~ trat, data = sobrev)
 ## 
@@ -159,62 +159,32 @@
 ##     5     11       8   0.0625  0.0349       0.0209        0.187
 ##     6      3       3   0.0000     NaN           NA           NA</code></pre>
 <p>Comparação pareada (pairwise) entre duas curvas de sobrevivência utilizando o teste G-rho (logrank test).</p>
-<p>No exemplo abaixo, testou-se a diferença entre os tratamentos <em>TETS030</em> e <em>CR030</em>.</p>
+<p>No exemplo abaixo, testou-se a diferença entre os tratamentos <em>TETS090</em> e <em>CR090</em>.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sobrev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">trat</span><span class="op">==</span><span class="st">"TEST030"</span> <span class="op">|</span> <span class="va">trat</span><span class="op">==</span><span class="st">"CR030"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/survdiff.html">survdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">trat</span>, data <span class="op">=</span> <span class="va">.</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sobrev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">trat</span> <span class="op">==</span> <span class="st">"TEST090"</span> <span class="op">|</span> <span class="va">trat</span> <span class="op">==</span> <span class="st">"CR090"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survdiff.html">survdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">status</span><span class="op">)</span> <span class="op">~</span> <span class="va">trat</span>, data <span class="op">=</span> <span class="va">.</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Call:
 ## survdiff(formula = Surv(time, status) ~ trat, data = .)
 ## 
 ##               N Observed Expected (O-E)^2/E (O-E)^2/V
-## trat=CR030   48       47     74.4      10.1      78.4
-## trat=TEST030 48       48     20.6      36.5      78.4
+## trat=CR090   48       45       72      10.1      69.9
+## trat=TEST090 48       48       21      34.5      69.9
 ## 
-##  Chisq= 78.4  on 1 degrees of freedom, p= &lt;2e-16</code></pre>
+##  Chisq= 69.9  on 1 degrees of freedom, p= &lt;2e-16</code></pre>
 <p>E as curvas de sobrevivência podem ser plotadas com o pacote <code>ggplot2</code>, utilizando a geometria <code>geom_step</code>.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span> <span class="va">g</span> <span class="op">&lt;-</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>trat<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">an_sobrev</span>, c <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">$</span><span class="va">strata</span>,</span>
-<span>          time<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">an_sobrev</span>, c <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">$</span><span class="va">time</span>,</span>
-<span>          surv<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">an_sobrev</span>, c <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">$</span><span class="va">surv</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">g_surv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  trat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">an_sobrev</span>, c <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">$</span><span class="va">strata</span>,</span>
+<span>  time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">an_sobrev</span>, c <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">$</span><span class="va">time</span>,</span>
+<span>  surv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">an_sobrev</span>, c <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">$</span><span class="va">surv</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">g</span></span></code></pre></div>
-<pre><code>##            trat time       surv
-## 1    trat=CR030    3 0.95833333
-## 2    trat=CR030    4 0.83333333
-## 3    trat=CR030    5 0.77083333
-## 4    trat=CR030    7 0.50000000
-## 5    trat=CR030    8 0.35416667
-## 6    trat=CR030    9 0.22916667
-## 7    trat=CR030   10 0.20833333
-## 8    trat=CR030   12 0.02083333
-## 9    trat=CR090    3 0.93750000
-## 10   trat=CR090    4 0.89583333
-## 11   trat=CR090    5 0.72916667
-## 12   trat=CR090    6 0.60416667
-## 13   trat=CR090    7 0.31250000
-## 14   trat=CR090    8 0.18750000
-## 15   trat=CR090    9 0.08333333
-## 16   trat=CR090   12 0.06250000
-## 17   trat=CR180   12 1.00000000
-## 18 trat=TEST030    2 0.52083333
-## 19 trat=TEST030    3 0.35416667
-## 20 trat=TEST030    4 0.10416667
-## 21 trat=TEST030    5 0.02083333
-## 22 trat=TEST030    6 0.00000000
-## 23 trat=TEST090    2 0.60416667
-## 24 trat=TEST090    3 0.41666667
-## 25 trat=TEST090    4 0.18750000
-## 26 trat=TEST090    5 0.04166667
-## 27 trat=TEST090    6 0.00000000
-## 28 trat=TEST180    2 0.77083333
-## 29 trat=TEST180    3 0.39583333
-## 30 trat=TEST180    4 0.22916667
-## 31 trat=TEST180    5 0.06250000
-## 32 trat=TEST180    6 0.00000000</code></pre>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="va">g</span><span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">trat</span><span class="op">==</span><span class="st">"trat=CR030"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">time</span>, y<span class="op">=</span><span class="va">surv</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="va">g_surv</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">trat</span> <span class="op">==</span> <span class="st">"trat=CR090"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">surv</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_step</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="05-sobrev_files/figure-html/unnamed-chunk-5-1.png" width="672"></div>
 

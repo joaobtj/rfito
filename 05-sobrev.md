@@ -32,13 +32,13 @@ A organização da planilha deve ser feita rigorosamente desta forma:
  * 4ª coluna em diante: número de indivíduos que apresentaram o evento estudado com o nome das colunas representando o tempo;
  * Última coluna: números de indivíduos censurados.
 
-Caso esta organização seja seguida rigorosamente, podemos utilizar a função [`surv_data`](script/surv_data.R) para preparar os dados para a Análise de sobrevivência.
+Caso esta organização seja seguida rigorosamente, podemos utilizar a função [`surv_data` (download aqui)](script/surv_data.R) para preparar os dados para a análise de sobrevivência.
 
 
 
 ```r
 source("script/surv_data.R")
-sobrev <- readxl::read_excel("data/surv.xlsx", skip=2) %>% surv_data()
+sobrev <- readxl::read_excel("data/surv.xlsx", skip = 2) %>% surv_data()
 ```
 
 
@@ -47,7 +47,7 @@ Iniciamos então a análise com o pacote `survival`:
 
 ```r
 library(survival)
-an_sobrev <- survfit(Surv(time, status)~trat, data=sobrev)
+an_sobrev <- survfit(Surv(time, status) ~ trat, data = sobrev)
 an_sobrev
 ```
 
@@ -125,13 +125,14 @@ summary(an_sobrev, censored = TRUE)
 
 Comparação pareada (pairwise) entre duas curvas de sobrevivência utilizando o teste G-rho (logrank test).
 
-No exemplo abaixo, testou-se a diferença entre os tratamentos *TETS030* e *CR030*.
+No exemplo abaixo, testou-se a diferença entre os tratamentos *TETS090* e *CR090*.
 
 
 
 ```r
-sobrev %>% filter(trat=="TEST030" | trat=="CR030") %>% 
-survdiff(Surv(time, status) ~ trat, data = .)
+sobrev %>%
+  filter(trat == "TEST090" | trat == "CR090") %>%
+  survdiff(Surv(time, status) ~ trat, data = .)
 ```
 
 ```
@@ -139,10 +140,10 @@ survdiff(Surv(time, status) ~ trat, data = .)
 ## survdiff(formula = Surv(time, status) ~ trat, data = .)
 ## 
 ##               N Observed Expected (O-E)^2/E (O-E)^2/V
-## trat=CR030   48       47     74.4      10.1      78.4
-## trat=TEST030 48       48     20.6      36.5      78.4
+## trat=CR090   48       45       72      10.1      69.9
+## trat=TEST090 48       48       21      34.5      69.9
 ## 
-##  Chisq= 78.4  on 1 degrees of freedom, p= <2e-16
+##  Chisq= 69.9  on 1 degrees of freedom, p= <2e-16
 ```
 
 E as curvas de sobrevivência podem ser plotadas com o pacote `ggplot2`, utilizando a geometria `geom_step`.
@@ -150,55 +151,18 @@ E as curvas de sobrevivência podem ser plotadas com o pacote `ggplot2`, utiliza
 
 
 ```r
- g <-
-    data.frame(trat=summary(an_sobrev, c = T)$strata,
-          time=summary(an_sobrev, c = T)$time,
-          surv=summary(an_sobrev, c = T)$surv)
+g_surv <- data.frame(
+  trat = summary(an_sobrev, c = T)$strata,
+  time = summary(an_sobrev, c = T)$time,
+  surv = summary(an_sobrev, c = T)$surv
+)
 
-g
-```
 
-```
-##            trat time       surv
-## 1    trat=CR030    3 0.95833333
-## 2    trat=CR030    4 0.83333333
-## 3    trat=CR030    5 0.77083333
-## 4    trat=CR030    7 0.50000000
-## 5    trat=CR030    8 0.35416667
-## 6    trat=CR030    9 0.22916667
-## 7    trat=CR030   10 0.20833333
-## 8    trat=CR030   12 0.02083333
-## 9    trat=CR090    3 0.93750000
-## 10   trat=CR090    4 0.89583333
-## 11   trat=CR090    5 0.72916667
-## 12   trat=CR090    6 0.60416667
-## 13   trat=CR090    7 0.31250000
-## 14   trat=CR090    8 0.18750000
-## 15   trat=CR090    9 0.08333333
-## 16   trat=CR090   12 0.06250000
-## 17   trat=CR180   12 1.00000000
-## 18 trat=TEST030    2 0.52083333
-## 19 trat=TEST030    3 0.35416667
-## 20 trat=TEST030    4 0.10416667
-## 21 trat=TEST030    5 0.02083333
-## 22 trat=TEST030    6 0.00000000
-## 23 trat=TEST090    2 0.60416667
-## 24 trat=TEST090    3 0.41666667
-## 25 trat=TEST090    4 0.18750000
-## 26 trat=TEST090    5 0.04166667
-## 27 trat=TEST090    6 0.00000000
-## 28 trat=TEST180    2 0.77083333
-## 29 trat=TEST180    3 0.39583333
-## 30 trat=TEST180    4 0.22916667
-## 31 trat=TEST180    5 0.06250000
-## 32 trat=TEST180    6 0.00000000
-```
-
-```r
 library(ggplot2)
-g%>% filter(trat=="trat=CR030") %>% ggplot( aes(x=time, y=surv))+
+g_surv %>%
+  filter(trat == "trat=CR090") %>%
+  ggplot(aes(x = time, y = surv)) +
   geom_step()
 ```
 
 <img src="05-sobrev_files/figure-html/unnamed-chunk-5-1.png" width="672" />
-

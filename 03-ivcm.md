@@ -47,36 +47,25 @@ O cálculo do IVCM para cada repetição de cada tratamento é feito com a funç
 ```r
 library(phytopathologyr)
 dados_ivcm <- dados_ivcm %>%
-  group_by(oe, dose, rep) %>%
-  summarise(area = mvi(diametro, tempo)) %>%
+  group_by(trat, rep) %>%
+  summarise(ivcm = mvi(diametro, tempo)) %>%
   ungroup()
 ```
 
 ```
-## `summarise()` has grouped output by 'oe', 'dose'. You can override using the
+## `summarise()` has grouped output by 'trat'. You can override using the
 ## `.groups` argument.
 ```
 
-```r
-dados_ivcm
-```
 
 ```
-## # A tibble: 40 × 4
-##    oe     dose   rep     area
-##    <chr> <dbl> <dbl>    <dbl>
-##  1 Cravo    50     1  2.12   
-##  2 Cravo    50     2  2.07   
-##  3 Cravo    50     3  1.99   
-##  4 Cravo    50     4  2.06   
-##  5 Cravo    50     5  2.01   
-##  6 Cravo   150     1  1.54   
-##  7 Cravo   150     2 -0.00961
-##  8 Cravo   150     3  1.20   
-##  9 Cravo   150     4 -0.00303
-## 10 Cravo   150     5  0.558  
-## # … with 30 more rows
+## Rows: 50
+## Columns: 3
+## $ trat <chr> "102B", "102B", "102B", "102B", "102B", "111B", "111B", "111B", "…
+## $ rep  <dbl> 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2,…
+## $ ivcm <dbl> 1.6756552, 1.6783320, 1.6114918, 1.8541976, 1.6912924, 1.4018704,…
 ```
+
 
 Por fim, o resultado destes cálculos pode ser salvo para utilização nas análises posteriores. O formato *.csv* é idela para salvar, visto que sua importação pelo R é facilmente executado e pode ser aberto em qualquer computador para leitura.
 

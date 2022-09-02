@@ -2,6 +2,7 @@ fig:curvaprog
 fig:excelaaccm
 análises-estatísticas-com-o-r-experimentos-aplicados-à-fitopatologia
 equipe
+projeto-do-rsudio-cloud
 aaccm
 aaccmexp
 ivcm

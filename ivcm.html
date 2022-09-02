@@ -73,7 +73,7 @@ IVCM =  \sum ((X_{i+1}-X_i) \cdot (T_{i+1}-T_i))
 <li>Tempo em que cada medida foi realizada (no exemplo abaixo, dias após a repicagem da colônia).</li>
 <li>Quantificação da doença (no exemplo abaixo, o diâmetro da colônia em cada tempo.)</li>
 </ol>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tempo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">5</span>, <span class="fl">6</span>, <span class="fl">7</span>, <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="va">diam</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.6</span>, <span class="fl">0.7</span>, <span class="fl">1.2</span>, <span class="fl">3.1</span>, <span class="fl">5.2</span>, <span class="fl">6.6</span>, <span class="fl">8.8</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">phytopathologyr</span><span class="op">)</span></span>
@@ -85,30 +85,19 @@ IVCM =  \sum ((X_{i+1}-X_i) \cdot (T_{i+1}-T_i))
 </h2>
 <p>O IVCM segue a mesma lógica utilizada no cálculo da AACCM. Para mais detalhes, consulte o item <a href="aaccm.html#aaccmexp">2.1</a>.</p>
 <p>O cálculo do IVCM para cada repetição de cada tratamento é feito com a função <code>mvi</code> do pacote <code>phytopathologyr</code>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">phytopathologyr</span><span class="op">)</span></span>
 <span><span class="va">dados_ivcm</span> <span class="op">&lt;-</span> <span class="va">dados_ivcm</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">oe</span>, <span class="va">dose</span>, <span class="va">rep</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/phytopathologyr/man/mvi.html">mvi</a></span><span class="op">(</span><span class="va">diametro</span>, <span class="va">tempo</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">trat</span>, <span class="va">rep</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>ivcm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/phytopathologyr/man/mvi.html">mvi</a></span><span class="op">(</span><span class="va">diametro</span>, <span class="va">tempo</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code>## `summarise()` has grouped output by 'oe', 'dose'. You can override using the
+<pre><code>## `summarise()` has grouped output by 'trat'. You can override using the
 ## `.groups` argument.</code></pre>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dados_ivcm</span></span></code></pre></div>
-<pre><code>## # A tibble: 40 × 4
-##    oe     dose   rep     area
-##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-##  1 Cravo    50     1  2.12   
-##  2 Cravo    50     2  2.07   
-##  3 Cravo    50     3  1.99   
-##  4 Cravo    50     4  2.06   
-##  5 Cravo    50     5  2.01   
-##  6 Cravo   150     1  1.54   
-##  7 Cravo   150     2 -0.00961
-##  8 Cravo   150     3  1.20   
-##  9 Cravo   150     4 -0.00303
-## 10 Cravo   150     5  0.558  
-## # … with 30 more rows</code></pre>
+<pre><code>## Rows: 50
+## Columns: 3
+## $ trat &lt;chr&gt; "102B", "102B", "102B", "102B", "102B", "111B", "111B", "111B", "…
+## $ rep  &lt;dbl&gt; 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2,…
+## $ ivcm &lt;dbl&gt; 1.6756552, 1.6783320, 1.6114918, 1.8541976, 1.6912924, 1.4018704,…</code></pre>
 <p>Por fim, o resultado destes cálculos pode ser salvo para utilização nas análises posteriores. O formato <em>.csv</em> é idela para salvar, visto que sua importação pelo R é facilmente executado e pode ser aberto em qualquer computador para leitura.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv2</a></span><span class="op">(</span><span class="va">dados_ivcm</span>, <span class="st">"data/ivcm.csv"</span><span class="op">)</span></span></code></pre></div>
