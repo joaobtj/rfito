@@ -81,7 +81,7 @@ dados_aaccm %>%
  A planilha do Excel deve ser organizada da seguinte forma:
  
 ```{r excelaaccm, echo=FALSE, fig.cap="Exemplo de planilha do Excel"}
-knitr::include_graphics("image/excel_diam.png")
+knitr::include_graphics("image/excel.png")
 ```
  
 
