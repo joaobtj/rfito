@@ -8,6 +8,7 @@ aaccmexp
 ivcm
 como-utilizar-o-ivcm-na-análise-de-experimentos
 análise-de-variância
+script-para-análise-de-variância
 surv
 curva-de-sobrevivência-de-kaplan-meier
 exemplo-de-uma-análise-de-sobrevivência

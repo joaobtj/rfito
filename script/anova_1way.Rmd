@@ -1,0 +1,222 @@
+---
+title: Modelo para Análise de Variância com 1 fator
+author: Prof. João B. Tolentino Jr.
+output: html_document
+date: "`r Sys.Date()`"
+params:
+  arquivo: bflor.xlsx
+  fator: especie
+  resposta: comprimento
+  testemunha: Hb
+  normalidade: TRUE
+  homogeneidade: TRUE
+---
+
+```{r, include=FALSE}
+library(dplyr)
+
+# importar o arquivo
+
+flag <- params$arquivo %>% stringr::str_detect("xlsx")
+
+if (flag) {
+  data <- readxl::read_excel(params$arquivo)
+} else {
+  data <- read_csv(params$arquivo)
+}
+
+data[[params$fator]] <- data[[params$fator]] %>% as.factor()
+
+```
+
+## Dicas iniciais
+
+Veja mais em https://biostat.tolentino.pro.br/anova.html
+
+1. Substitua livremente os comentários e adicione texto conforme necessário, mas cuidado ao fazer alterações dentro dos códigos em R!
+
+2. Substituir os valores dos parâmetros (*params*) no cabeçalho rigorosamente igual aos valores digitados no arquivo.
+* Caso não tenha uma testemunha (ou não queira executar o teste de Dunnett), coloque o valor deste argumento como NULL
+
+3. O arquivo deve estar digitado no formato [Tidy](https://biostat.tolentino.pro.br/comeco.html#tidydata)
+
+4. Extensões permitidas:
+* [xlsx](https://biostat.tolentino.pro.br/comeco.html#importando-arquivos-do-excel)
+* [csv](https://biostat.tolentino.pro.br/comeco.html#importar-arquivos-.csv)
+
+5. O arquivo de dados deve estar salvo no mesmo diretório do arquivo Rmd. Para evitar erros, use um [projeto do RStudio(https://biostat.tolentino.pro.br/comeco.html#criar-um-projeto-no-rstudio)
+
+6. Pacotes necessários: *dplyr*, *stringr*, *car*, *moments*, *emmeans*,*ScottKnott*
+
+* Caso necessário, instale com o comando:
+
+```r
+install.packages(c("dplyr", "stringr", "car", "moments", "emmeans","ScottKnott"))
+```
+
+
+
+
+
+## Análise exploratória
+
+Iniciamos a ANOVA com uma análise exploratória dos dados.
+
+```{r}
+data %>%
+  group_by(.data[[params$fator]]) %>%
+  summarise(
+    n = n(),
+    media = mean(.data[[params$resposta]]),
+    desvpad = sd(.data[[params$resposta]]),
+    var = var(.data[[params$resposta]])
+  )
+
+boxplot(data[[params$resposta]] ~ data[[params$fator]],
+  ylab = params$resposta,
+  xlab = params$fator
+)
+```
+
+COMENTÁRIOS DA ANÁLISE EXPLORATÓRIA
+
+
+## Análise de Variância
+
+Cálculo da Análise de Variância propriamente dita.
+
+```{r}
+aov <- lm(reformulate(termlabels = params$fator, response = params$resposta), data = data)
+anova(aov)
+```
+
+COMENTÁRIOS DA ANÁLISE DE VARIÂNCIA
+
+
+## Verificação do pressuposto da Normalidade
+
+```{r, eval=params$normalidade, echo=params$normalidade}
+## curtose
+aov %>%
+  residuals() %>%
+  moments::kurtosis()
+
+## assimetria
+aov %>%
+  residuals() %>%
+  moments::skewness()
+
+## Teste de Shapiro-Wilk
+aov %>%
+  residuals() %>%
+  shapiro.test()
+
+## Gráfico dos quantis normais
+aov %>%
+  residuals() %>%
+  qqnorm()
+aov %>%
+  residuals() %>%
+  qqline()
+
+## Histograma
+aov %>%
+  residuals() %>%
+  hist()
+
+## Ramo e folhas
+aov %>%
+  residuals() %>%
+  stem()
+```
+
+
+COMENTÁRIOS DO PRESSUPOSTO DA NORMALIDADE
+
+
+## Verificação do pressuposto da homogeneidade das variâncias
+
+```{r, eval=params$homogeneidade, echo=params$homogeneidade}
+## razão maior/menor desvio-padrão
+data %>%
+  group_by(.data[[params$fator]]) %>%
+  summarise(desvpad = sd(.data[[params$resposta]])) %>%
+  mutate(razao = max(desvpad) / desvpad) %>%
+  arrange(desc(razao))
+
+## boxplot condicional dos resíduos
+boxplot(residuals(aov) ~ data[[params$fator]],
+  xlab = params$fator
+)
+
+## resíduos vs ajustados
+plot(aov, 1)
+
+## teste de Bartlett
+bartlett.test(residuals(aov) ~ factor(data[[params$fator]]))
+
+## teste de Levene
+car::leveneTest(residuals(aov) ~ factor(data[[params$fator]]))
+
+## teste de Fligner-Killeen
+fligner.test(residuals(aov) ~ factor(data[[params$fator]]))
+```
+
+
+COMENTÁRIOS DO PRESSUPOSTO DA HOMOGENEIDADE DAS VARIÂNCIAS
+
+
+## Testes de acompanhamento
+
+### Teste de Dunnett
+
+```{r, eval=!is.null(params$testemunha), echo=!is.null(params$testemunha)}
+dn <- emmeans::emmeans(aov,
+  specs = params$fator, contr = "dunnett",
+  ref = which(names(table(data[[params$fator]])) == params$testemunha)
+)
+
+## contrastes
+dn$contrasts
+
+## intervalo de confiança
+dn$contrasts %>% confint()
+
+## plot
+dn$emmeans %>% plot()
+```
+
+COMENTÁRIOS DO TESTE DE DUNNETT
+
+
+### Teste de Tukey
+
+```{r}
+tk <- emmeans::emmeans(aov, params$fator, contr = "tukey")
+
+## contrastes
+tk$contrasts
+
+## Intervalo de confiança
+tk$contrasts %>% confint()
+
+## letras (CLD)
+tk$emmeans %>% multcomp::cld(Letters = letters)
+
+## Pairwise P-value matrix
+emmeans::pwpm(tk$emmeans)
+
+## plot
+tk$emmeans %>% plot()
+```
+
+
+COMENTÁRIOS DO TESTE DE TUKEY
+
+### Teste de Scott Knott
+
+```{r}
+ScottKnott::SK(aov)
+```
+
+COMENTÁRIOS DO TESTE DE SCOTT KNOTT

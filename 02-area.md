@@ -77,7 +77,7 @@ As curvas de progressos só podem ser comparadas entre si quando tem exatamente 
  A planilha do Excel deve ser organizada da seguinte forma:
  
 <div class="figure">
-<img src="image/excel_diam.png" alt="Exemplo de planilha do Excel"  />
+<img src="image/excel.png" alt="Exemplo de planilha do Excel"  />
 <p class="caption">(\#fig:excelaaccm)Exemplo de planilha do Excel</p>
 </div>
  

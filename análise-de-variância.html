@@ -6,15 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Capítulo 4 Análise de Variância | Análises estatísticas com o R: Experimentos aplicados à Fitopatologia</title>
 <meta name="author" content="João B. Tolentino Jr.">
-<meta name="description" content="Veja o material publica em biostat.tolentino.pro.br Análise de Variância para 1 fator Análise de Variância para 2 fatores">
+<meta name="description" content="Veja o material publica em biostat.tolentino.pro.br Análise de Variância para 1 fator Análise de Variância para 2 fatores  4.1 Script para Análise de Variância Download para ANOVA de 1 fator">
 <meta name="generator" content="bookdown 0.28 with bs4_book()">
 <meta property="og:title" content="Capítulo 4 Análise de Variância | Análises estatísticas com o R: Experimentos aplicados à Fitopatologia">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://rfito.tolentino.pro.br/análise-de-variância.html">
-<meta property="og:description" content="Veja o material publica em biostat.tolentino.pro.br Análise de Variância para 1 fator Análise de Variância para 2 fatores">
+<meta property="og:description" content="Veja o material publica em biostat.tolentino.pro.br Análise de Variância para 1 fator Análise de Variância para 2 fatores  4.1 Script para Análise de Variância Download para ANOVA de 1 fator">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Capítulo 4 Análise de Variância | Análises estatísticas com o R: Experimentos aplicados à Fitopatologia">
-<meta name="twitter:description" content="Veja o material publica em biostat.tolentino.pro.br Análise de Variância para 1 fator Análise de Variância para 2 fatores">
+<meta name="twitter:description" content="Veja o material publica em biostat.tolentino.pro.br Análise de Variância para 1 fator Análise de Variância para 2 fatores  4.1 Script para Análise de Variância Download para ANOVA de 1 fator">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Montserrat-0.4.2/font.css" rel="stylesheet">
@@ -65,14 +65,23 @@
 <p>Veja o material publica em biostat.tolentino.pro.br</p>
 <p><a href="https://biostat.tolentino.pro.br/anova.html" target="_blank">Análise de Variância para 1 fator</a></p>
 <p><a href="https://biostat.tolentino.pro.br/an%C3%A1lise-de-vari%C3%A2ncia-para-2-fatores.html" target="_blank">Análise de Variância para 2 fatores</a></p>
+<div id="script-para-análise-de-variância" class="section level2" number="4.1">
+<h2>
+<span class="header-section-number">4.1</span> Script para Análise de Variância<a class="anchor" aria-label="anchor" href="#script-para-an%C3%A1lise-de-vari%C3%A2ncia"><i class="fas fa-link"></i></a>
+</h2>
+<p><a href="script/anova_1way.Rmd">Download para ANOVA de 1 fator</a></p>
 
+</div>
 </div>
   <div class="chapter-nav">
 <div class="prev"><a href="ivcm.html"><span class="header-section-number">3</span> Índice de Velocidade do Crescimento Micelial - IVCM</a></div>
 <div class="next"><a href="surv.html"><span class="header-section-number">5</span> Análise de sobrevivência</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
-      <ul class="nav navbar-nav"><li><a class="nav-link" href="#an%C3%A1lise-de-vari%C3%A2ncia"><span class="header-section-number">4</span> Análise de Variância</a></li></ul>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#an%C3%A1lise-de-vari%C3%A2ncia"><span class="header-section-number">4</span> Análise de Variância</a></li>
+<li><a class="nav-link" href="#script-para-an%C3%A1lise-de-vari%C3%A2ncia"><span class="header-section-number">4.1</span> Script para Análise de Variância</a></li>
+</ul>
 
       <div class="book-extra">
         <ul class="list-unstyled">
@@ -89,7 +98,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Análises estatísticas com o R: Experimentos aplicados à Fitopatologia</strong>" was written by João B. Tolentino Jr.. It was last built on 2022-09-02.</p>
+    <p>"<strong>Análises estatísticas com o R: Experimentos aplicados à Fitopatologia</strong>" was written by João B. Tolentino Jr.. It was last built on 2022-09-03.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

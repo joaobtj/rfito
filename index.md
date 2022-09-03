@@ -1,7 +1,7 @@
 --- 
 title: "Análises estatísticas com o R: Experimentos aplicados à Fitopatologia"
 author: "João B. Tolentino Jr."
-date: "2022-09-02"
+date: "2022-09-03"
 description: "Material auxiliar do curso de Análises estatísticas com o R: Experimentos aplicados à Fitopatologia."
 #cover-image: image/cover.jpg
 #apple-touch-icon: image/cover.jpg
